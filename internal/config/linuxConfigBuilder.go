@@ -19,7 +19,7 @@ func (b *linuxConfigBuilder) setDependency(dep string) {
 
 func (b *linuxConfigBuilder) getConfig() Product {
 	return Product{
-		packageManager: b.packageManager,
-		dependencies:   b.dependencies,
+		PackageManager: b.packageManager,
+		Dependencies:   b.dependencies,
 	}
 }

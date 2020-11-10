@@ -62,8 +62,8 @@ func TestDirector_MakeConfig(t *testing.T) {
 				builder: GetBuilder(OSX),
 			},
 			want: Product{
-				packageManager: "brew",
-				dependencies:   deps,
+				PackageManager: "brew",
+				Dependencies:   deps,
 			},
 		},
 		{
@@ -72,8 +72,8 @@ func TestDirector_MakeConfig(t *testing.T) {
 				builder: GetBuilder(Linux),
 			},
 			want: Product{
-				packageManager: "apt",
-				dependencies:   deps,
+				PackageManager: "apt",
+				Dependencies:   deps,
 			},
 		},
 	}
