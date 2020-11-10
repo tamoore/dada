@@ -10,6 +10,7 @@ import (
 
 // Config ...
 type Config struct {
+	result chan Product
 	os     string
 	choice configType
 	chosen bool
@@ -46,7 +47,8 @@ func (c Config) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			c.chosen = true
 			c.config = NewProduct(c.choice)
-			return c, nil
+			c.result <- c.config
+			return c, tea.Quit
 		case "q":
 			return c, tea.Quit
 		}
@@ -67,21 +69,21 @@ func (c Config) View() string {
 		view += util.Checkbox("OSX", c.choice == OSX)
 		view += util.Checkbox("Linux", c.choice == Linux)
 	}
-
-	view += "\n"
 	return view
 }
 
 // NewProduct ...
 func NewProduct(t configType) Product {
-	builder := GetBuilder(Linux)
+	builder := GetBuilder(t)
 	director := NewDirector(builder)
 	return director.MakeConfig()
 }
 
 // Start ...
-func Start() {
-	p := tea.NewProgram(&Config{})
+func Start(result chan Product) {
+	p := tea.NewProgram(&Config{
+		result: result,
+	})
 	if err := p.Start(); err != nil {
 		log.Fatal(err)
 	}

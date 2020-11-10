@@ -17,3 +17,6 @@
 # Ignore go executables 
 test/executables/config/*
 !test/executables/config/main.go
+
+# Ignore the dada executable
+dada
