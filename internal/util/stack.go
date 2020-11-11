@@ -27,7 +27,7 @@ func (c *ConcreteStack) Pop() (interface{}, bool) {
 	}
 
 	index := len(*c)
-	item := (*c)[index]
-	*c = (*c)[:index]
+	item := (*c)[index-1]
+	*c = (*c)[:index-1]
 	return item, true
 }
