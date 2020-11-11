@@ -1,4 +1,4 @@
-package util
+package ui
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	cl "github.com/fatih/color"
 )
 
+// Checkbox ...
 func Checkbox(label string, checked bool) string {
 	if checked {
 

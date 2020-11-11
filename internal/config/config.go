@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	cl "github.com/fatih/color"
-	"github.com/tamoore/dada/internal/util"
+	ui "github.com/tamoore/dada/internal/ui"
 )
 
 // Config ...
@@ -66,8 +66,8 @@ func (c Config) View() string {
 		view += "\n"
 		view += cl.New(cl.FgWhite).Sprint("Choose which OS this install should target?")
 		view += "\n"
-		view += util.Checkbox("OSX", c.choice == OSX)
-		view += util.Checkbox("Linux", c.choice == Linux)
+		view += ui.Checkbox("OSX", c.choice == OSX)
+		view += ui.Checkbox("Linux", c.choice == Linux)
 	}
 	return view
 }
