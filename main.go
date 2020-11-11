@@ -6,32 +6,32 @@ import (
 	"github.com/tamoore/dada/internal/util"
 )
 
-func addNextInstallStep(stack *util.ConcreteStack, step setup.InstallStepable) {
-	nextStepName, hasNext := stack.Pop()
+func addNextInstallStep(stack *util.ConcreteQueue, packageManager string) *setup.InstallStep {
+	stepName, hasNext := stack.Pop()
+	step := &setup.InstallStep{}
+	step.SetName(stepName.(string))
+	step.SetPackageManager(packageManager)
 
 	if hasNext {
-		nextStep := &setup.InstallStep{}
-		nextStep.SetName(nextStepName.(string))
-		nextStep.SetPackageManager(step.GetPackageManager())
-		addNextInstallStep(stack, nextStep)
+		nextStep := addNextInstallStep(stack, packageManager)
+		step.SetNext(nextStep)
 	}
+
+	return step
 }
 
 func main() {
 	c := make(chan config.Product)
 	go config.Start(c)
 	configProduct := <-c
-	installStack := &util.ConcreteStack{}
+	installStack := &util.ConcreteQueue{}
+	installMap := make(map[string]bool)
 
 	for _, program := range configProduct.Dependencies {
+		installMap[program] = false
 		installStack.Push(program)
 	}
 
-	initialStepName, hasNext := installStack.Pop()
-	if hasNext {
-		initialStep := &setup.InstallStep{}
-		initialStep.SetName(initialStepName.(string))
-		initialStep.SetPackageManager(configProduct.PackageManager)
-		addNextInstallStep(installStack, initialStep)
-	}
+	step := addNextInstallStep(installStack, configProduct.PackageManager)
+	step.Execute(installMap)
 }

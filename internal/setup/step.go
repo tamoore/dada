@@ -1,8 +1,10 @@
 package setup
 
+import "fmt"
+
 // Step ...
 type Step interface {
-	Execute(steps *map[string]bool)
+	Execute(steps map[string]bool)
 	SetNext(step Step)
 }
 
@@ -22,8 +24,18 @@ type InstallStep struct {
 }
 
 // Execute ...
-func (s *InstallStep) Execute(steps *map[string]bool) {
+func (s *InstallStep) Execute(steps map[string]bool) {
+	if steps[s.program] {
+		fmt.Printf("\nStep already %s done.", s.program)
+		s.next.Execute(steps)
+		return
+	}
+	fmt.Printf("Run %s\n", s.program)
+	steps[s.program] = true
 
+	if s.next != nil {
+		s.next.Execute(steps)
+	}
 }
 
 // SetNext ...
