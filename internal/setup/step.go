@@ -1,6 +1,11 @@
 package setup
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+	"os/exec"
+)
 
 // Step ...
 type Step interface {
@@ -30,7 +35,16 @@ func (s *InstallStep) Execute(steps map[string]bool) {
 		s.next.Execute(steps)
 		return
 	}
-	fmt.Printf("Run %s\n", s.program)
+	fmt.Printf("Running '%s install %s'\n", s.packageManager, s.program)
+	cmd := exec.Command("sudo", s.packageManager, "install", "-y", s.program)
+	cmd.Stderr = os.Stdout
+	cmd.Stdout = os.Stdout
+	err := cmd.Run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	steps[s.program] = true
 
 	if s.next != nil {
