@@ -6,14 +6,14 @@ import (
 	"github.com/tamoore/dada/internal/util"
 )
 
-func addNextInstallStep(stack *util.ConcreteQueue, packageManager string) *setup.InstallStep {
-	stepName, hasNext := stack.Pop()
+func addNextInstallStep(queue *util.ConcreteQueue, packageManager string) *setup.InstallStep {
+	stepName, hasNext := queue.Pop()
 	step := &setup.InstallStep{}
 	step.SetName(stepName.(string))
 	step.SetPackageManager(packageManager)
 
 	if hasNext {
-		nextStep := addNextInstallStep(stack, packageManager)
+		nextStep := addNextInstallStep(queue, packageManager)
 		step.SetNext(nextStep)
 	}
 
