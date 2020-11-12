@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
+
+	cl "github.com/fatih/color"
 )
 
 // Step ...
@@ -35,14 +37,14 @@ func (s *InstallStep) Execute(steps map[string]bool) {
 		s.next.Execute(steps)
 		return
 	}
-	fmt.Printf("Running '%s install %s'\n", s.packageManager, s.program)
+	cl.New(cl.FgHiYellow).Printf("==> Running '%s install %s'\n", s.packageManager, s.program)
 	cmd := exec.Command("sudo", s.packageManager, "install", "-y", s.program)
 	cmd.Stderr = os.Stdout
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(cl.New(cl.FgHiRed).Sprint(err))
 	}
 
 	steps[s.program] = true
