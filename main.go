@@ -22,7 +22,9 @@ func addNextInstallStep(queue *util.ConcreteQueue, packageManager string) *setup
 
 func main() {
 	c := make(chan config.Product)
+
 	go config.Start(c)
+
 	configProduct := <-c
 	installStack := &util.ConcreteQueue{}
 	installMap := make(map[string]bool)
